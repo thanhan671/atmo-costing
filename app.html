@@ -72,7 +72,7 @@
     </main>
 
     <dialog id="materialDialog" class="dialog"><form method="dialog" id="materialForm">
-      <div class="dialog-head"><h3 id="materialDialogTitle">Nguyên vật liệu</h3><button class="icon-btn" value="cancel">×</button></div>
+      <div class="dialog-head"><h3 id="materialDialogTitle">Nguyên vật liệu</h3><button class="icon-btn" value="cancel" formnovalidate>×</button></div>
       <input id="materialId" type="hidden">
       <div class="form-grid two">
         <label>Mã NVL<input id="mCode" required></label><label>Tên nguyên vật liệu<input id="mName" required></label>
@@ -82,11 +82,11 @@
         <label>Giá nhập (đ)<input id="mPurchasePrice" type="number" min="0" required></label>
       </div>
       <p class="hint">Ví dụ: cuộn nhựa 1 kg → SL/Quy cách = 1000 gram. Gói 100 khoen → SL/Quy cách = 100.</p>
-      <div class="dialog-actions"><button value="cancel" class="btn secondary">Hủy</button><button id="btnSaveMaterial" value="default" class="btn primary">Lưu</button></div>
+      <div class="dialog-actions"><button value="cancel" class="btn secondary" formnovalidate>Hủy</button><button id="btnSaveMaterial" value="default" class="btn primary">Lưu</button></div>
     </form></dialog>
 
     <dialog id="productDialog" class="dialog wide"><form method="dialog" id="productForm">
-      <div class="dialog-head"><h3 id="productDialogTitle">Sản phẩm</h3><button class="icon-btn" value="cancel">×</button></div><input id="productId" type="hidden">
+      <div class="dialog-head"><h3 id="productDialogTitle">Sản phẩm</h3><button class="icon-btn" value="cancel" formnovalidate>×</button></div><input id="productId" type="hidden">
       <div class="form-grid four">
         <label>Mã SP<input id="pCode" required></label><label>Tên sản phẩm<input id="pName" required></label>
         <label>Số SP / PEI<input id="pPlateQty" type="number" min="1" step="1" required></label><div class="time-field">
@@ -106,7 +106,7 @@
         <label>Chi phí khác / SP (đ)<input id="pOtherCost" type="number" min="0" step="100"></label>
       </div>
       <div id="costPreview" class="cost-preview"></div>
-      <div class="dialog-actions"><button value="cancel" class="btn secondary">Hủy</button><button id="btnSaveProduct" value="default" class="btn primary">Lưu sản phẩm</button></div>
+      <div class="dialog-actions"><button value="cancel" class="btn secondary" formnovalidate>Hủy</button><button id="btnSaveProduct" value="default" class="btn primary">Lưu sản phẩm</button></div>
     </form></dialog>
 
     <template id="materialRowTemplate"><div class="material-row"><select class="mat-select"></select><input class="mat-qty" type="number" min="0" step="0.01"><span class="unit-label"></span></div></template>
