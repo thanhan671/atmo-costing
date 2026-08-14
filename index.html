@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#111827" />
+  <title>ATMO Costing</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+</head>
+<body>
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="brand-mark">AT</div>
+      <h1>ATMO Costing</h1>
+      <p class="muted">Đăng nhập để đồng bộ dữ liệu giá in 3D trên mọi thiết bị.</p>
+      <div class="auth-tabs">
+        <button id="authLoginTab" class="auth-tab active">Đăng nhập</button>
+        <button id="authSignupTab" class="auth-tab">Tạo tài khoản</button>
+      </div>
+      <form id="authForm">
+        <label>Email<input id="authEmail" type="email" autocomplete="email" required></label>
+        <label>Mật khẩu<input id="authPassword" type="password" minlength="6" autocomplete="current-password" required></label>
+        <button id="authSubmit" class="btn primary full" type="submit">Đăng nhập</button>
+      </form>
+      <p id="authMessage" class="auth-message"></p>
+      <p class="hint">Dữ liệu được bảo vệ bằng Row Level Security của Supabase.</p>
+    </div>
+  </section>
+
+  <div id="appShell" hidden>
+    <header class="app-header">
+      <div>
+        <h1>ATMO Costing</h1>
+        <p>Quản lý nguyên vật liệu & tính giá sản phẩm in 3D theo PEI / mẻ in</p>
+      </div>
+      <div class="header-actions">
+        <span id="syncStatus" class="sync-status">Đã đồng bộ</span>
+        <span id="userEmail" class="user-email"></span>
+        <button id="btnExport" class="btn secondary">Xuất JSON</button>
+        <label class="btn secondary file-btn">Nhập JSON<input id="fileImport" type="file" accept="application/json" hidden></label>
+        <button id="btnLogout" class="btn secondary">Đăng xuất</button>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="products">Quản lý giá</button>
+      <button class="tab" data-tab="materials">Nguyên vật liệu</button>
+      <button class="tab" data-tab="settings">Thiết lập</button>
+    </nav>
+
+    <main>
+      <section id="tab-products" class="panel active">
+        <div class="toolbar">
+          <div><h2>Sản phẩm</h2><p class="muted">Chi phí nhựa, điện và máy được phân bổ từ cả PEI về từng sản phẩm.</p></div>
+          <button id="btnAddProduct" class="btn primary">+ Thêm sản phẩm</button>
+        </div>
+        <div class="table-wrap"><table id="productTable"><thead><tr>
+          <th>Mã SP</th><th>Tên sản phẩm</th><th>SP/PEI</th><th>Giờ/PEI</th>
+          <th>Nhựa/SP</th><th>Phụ kiện/SP</th><th>Bao bì/SP</th><th>Điện/SP</th><th>Máy/SP</th><th>Hậu xử lý/SP</th>
+          <th>Giá vốn</th><th>Trực tiếp</th><th>MXH</th><th>Shopee</th><th>TikTok</th><th></th>
+        </tr></thead><tbody></tbody></table></div>
+      </section>
+
+      <section id="tab-materials" class="panel">
+        <div class="toolbar">
+          <div><h2>Nguyên vật liệu</h2><p class="muted">Nhựa tính theo gram; phụ kiện và bao bì tính theo đơn vị sử dụng.</p></div>
+          <button id="btnAddMaterial" class="btn primary">+ Thêm nguyên vật liệu</button>
+        </div>
+        <div class="table-wrap"><table id="materialTable"><thead><tr>
+          <th>Mã NVL</th><th>Tên</th><th>Nhóm</th><th>ĐVT nhập</th><th>SL/Quy cách</th><th>Giá nhập</th><th>Đơn giá/đơn vị</th><th></th>
+        </tr></thead><tbody></tbody></table></div>
+      </section>
+
+      <section id="tab-settings" class="panel">
+        <div class="settings-grid">
+          <div class="card"><label>Chi phí máy / giờ (đ)<input id="sMachinePerHour" type="number" min="0"></label></div>
+          <div class="card"><label>Giá điện / kWh (đ)<input id="sElectricityPrice" type="number" min="0"></label></div>
+          <div class="card"><label>Công suất TB máy (kW)<input id="sPowerKw" type="number" min="0" step="0.01"></label></div>
+          <div class="card"><label>Công hậu xử lý / giờ (đ)<input id="sLaborPerHour" type="number" min="0"></label></div>
+          <div class="card"><label>Tỷ lệ lỗi dự phòng (%)<input id="sFailureRate" type="number" min="0" max="100" step="0.1"></label></div>
+          <div class="card"><label>Lợi nhuận mục tiêu / giá vốn (%)<input id="sProfitRate" type="number" min="0" step="1"></label></div>
+          <div class="card"><label>Phí MXH (%)<input id="sSocialFee" type="number" min="0" max="99" step="0.1"></label></div>
+          <div class="card"><label>Phí Shopee (%)<input id="sShopeeFee" type="number" min="0" max="99" step="0.1"></label></div>
+          <div class="card"><label>Phí TikTok (%)<input id="sTikTokFee" type="number" min="0" max="99" step="0.1"></label></div>
+        </div>
+        <div class="settings-actions"><button id="btnSaveSettings" class="btn primary">Lưu thiết lập</button></div>
+      </section>
+    </main>
+
+    <dialog id="materialDialog" class="dialog"><form method="dialog" id="materialForm">
+      <div class="dialog-head"><h3 id="materialDialogTitle">Nguyên vật liệu</h3><button class="icon-btn" value="cancel">×</button></div>
+      <input id="materialId" type="hidden">
+      <div class="form-grid two">
+        <label>Mã NVL<input id="mCode" required></label><label>Tên nguyên vật liệu<input id="mName" required></label>
+        <label>Nhóm<select id="mGroup" required><option>Nhựa</option><option>Phụ kiện</option><option>Bao bì</option></select></label>
+        <label>ĐVT nhập<input id="mUnit" placeholder="Cuộn, Gói, Cái..."></label>
+        <label>SL / Quy cách<input id="mPackQty" type="number" min="0.0001" step="0.01" required></label>
+        <label>Giá nhập (đ)<input id="mPurchasePrice" type="number" min="0" required></label>
+      </div>
+      <p class="hint">Ví dụ: cuộn nhựa 1 kg → SL/Quy cách = 1000 gram. Gói 100 khoen → SL/Quy cách = 100.</p>
+      <div class="dialog-actions"><button value="cancel" class="btn secondary">Hủy</button><button id="btnSaveMaterial" value="default" class="btn primary">Lưu</button></div>
+    </form></dialog>
+
+    <dialog id="productDialog" class="dialog wide"><form method="dialog" id="productForm">
+      <div class="dialog-head"><h3 id="productDialogTitle">Sản phẩm</h3><button class="icon-btn" value="cancel">×</button></div><input id="productId" type="hidden">
+      <div class="form-grid four">
+        <label>Mã SP<input id="pCode" required></label><label>Tên sản phẩm<input id="pName" required></label>
+        <label>Số SP / PEI<input id="pPlateQty" type="number" min="1" step="1" required></label><label>Giờ in / PEI<input id="pPlateHours" type="number" min="0" step="0.01" required></label>
+      </div>
+      <h4>Nhựa dùng cho cả PEI</h4><div id="plasticRows" class="material-rows"></div>
+      <h4>Phụ kiện dùng cho 1 sản phẩm</h4><div id="accessoryRows" class="material-rows"></div>
+      <h4>Bao bì dùng cho 1 sản phẩm</h4><div id="packagingRows" class="material-rows"></div>
+      <h4>Hậu xử lý & chi phí khác</h4><div class="form-grid three">
+        <label>Tháo support (phút/SP)<input id="pSupportMinutes" type="number" min="0" step="0.1"></label>
+        <label>Xử lý bề mặt (phút/SP)<input id="pSurfaceMinutes" type="number" min="0" step="0.1"></label>
+        <label>Chi phí khác / SP (đ)<input id="pOtherCost" type="number" min="0" step="100"></label>
+      </div>
+      <div id="costPreview" class="cost-preview"></div>
+      <div class="dialog-actions"><button value="cancel" class="btn secondary">Hủy</button><button id="btnSaveProduct" value="default" class="btn primary">Lưu sản phẩm</button></div>
+    </form></dialog>
+
+    <template id="materialRowTemplate"><div class="material-row"><select class="mat-select"></select><input class="mat-qty" type="number" min="0" step="0.01"><span class="unit-label"></span></div></template>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
