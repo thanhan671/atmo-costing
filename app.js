@@ -5,7 +5,7 @@ const money=n=>new Intl.NumberFormat('vi-VN',{style:'currency',currency:'VND',ma
 const round1000=n=>Math.ceil((Number(n)||0)/1000)*1000;
 const uid=()=>crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random());
 const defaultSettings={machinePerHour:2000,electricityPrice:3000,powerKw:.18,laborPerHour:30000,failureRate:.08,profitRate:.80,socialFee:.03,shopeeFee:.18,tiktokFee:.20};
-let authMode='login', currentUser=null, data={settings:{...defaultSettings},materials:[],products:[]};
+let currentUser=null, data={settings:{...defaultSettings},materials:[],products:[]};
 
 const $=id=>document.getElementById(id), val=id=>$(id).value, num=id=>Number(val(id))||0, setVal=(id,v)=>{$(id).value=v??''}, fmt=n=>new Intl.NumberFormat('vi-VN').format(Number(n||0)), esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
 function setSync(text,state=''){const el=$('syncStatus');if(!el)return;el.textContent=text;el.className='sync-status'+(state?' '+state:'')}
@@ -20,16 +20,47 @@ function calc(p){const s=data.settings,plateQty=Math.max(1,Number(p.plateQty)||1
  const pre=plastics+acc+pack+electricity+machine+post+(Number(p.otherCost)||0),failure=pre*s.failureRate,cost=pre+failure;
  return {plastics,acc,pack,electricityPlate,electricity,machinePlate,machine,post,pre,failure,cost,direct:round1000(cost*(1+s.profitRate)),social:round1000(cost*(1+s.profitRate)/(1-s.socialFee)),shopee:round1000(cost*(1+s.profitRate)/(1-s.shopeeFee)),tiktok:round1000(cost*(1+s.profitRate)/(1-s.tiktokFee))};}
 
-async function init(){if(!configured){showAuthMessage('Chưa cấu hình Supabase. Hãy điền SUPABASE_URL và SUPABASE_ANON_KEY trong config.js.');return}
- const {data:{session}}=await sb.auth.getSession(); await handleSession(session);
- sb.auth.onAuthStateChange(async(_event,session)=>{await handleSession(session)});
+const LOGIN_URL = new URL('index.html', window.location.href).href;
+
+async function init(){
+  if(!configured){
+    alert('Chưa cấu hình Supabase trong config.js.');
+    window.location.replace(LOGIN_URL);
+    return;
+  }
+
+  try{
+    const {data:{session},error}=await sb.auth.getSession();
+    if(error) throw error;
+    if(!session){
+      window.location.replace(LOGIN_URL);
+      return;
+    }
+
+    currentUser=session.user;
+    $('userEmail').textContent=currentUser.email||'';
+    await loadCloud();
+    renderAll();
+
+    sb.auth.onAuthStateChange((event,nextSession)=>{
+      if(event==='SIGNED_OUT' || !nextSession){
+        window.location.replace(LOGIN_URL);
+      }
+    });
+  }catch(err){
+    console.error('ATMO init error:',err);
+    alert('Không thể tải dữ liệu: '+(err?.message||err));
+  }
 }
-async function handleSession(session){currentUser=session?.user||null;$('authScreen').hidden=!!currentUser;$('appShell').hidden=!currentUser;if(currentUser){$('userEmail').textContent=currentUser.email||'';await loadCloud();renderAll()}else{$('userEmail').textContent=''}}
-function showAuthMessage(msg,ok=false){const el=$('authMessage');el.textContent=msg||'';el.style.color=ok?'#15803d':'#dc2626'}
-function setAuthMode(mode){authMode=mode;$('authLoginTab').classList.toggle('active',mode==='login');$('authSignupTab').classList.toggle('active',mode==='signup');$('authSubmit').textContent=mode==='login'?'Đăng nhập':'Tạo tài khoản';$('authPassword').autocomplete=mode==='login'?'current-password':'new-password';showAuthMessage('')}
-$('authLoginTab').onclick=()=>setAuthMode('login');$('authSignupTab').onclick=()=>setAuthMode('signup');
-$('authForm').onsubmit=async e=>{e.preventDefault();showAuthMessage('');const email=val('authEmail').trim(),password=val('authPassword');$('authSubmit').disabled=true;try{if(authMode==='login'){const {error}=await sb.auth.signInWithPassword({email,password});if(error)throw error}else{const {data:r,error}=await sb.auth.signUp({email,password,options:{emailRedirectTo:'https://thanhan671.github.io/atmo-costing/'}});if(error)throw error;if(!r.session)showAuthMessage('Đã tạo tài khoản. Hãy kiểm tra email xác nhận rồi đăng nhập.',true)}}catch(err){showAuthMessage(err.message||'Không thể đăng nhập.')}finally{$('authSubmit').disabled=false}};
-$('btnLogout').onclick=()=>sb.auth.signOut();
+
+$('btnLogout').onclick=async()=>{
+  const {error}=await sb.auth.signOut();
+  if(error){
+    alert('Không thể đăng xuất: '+error.message);
+    return;
+  }
+  window.location.replace(LOGIN_URL);
+};
 
 async function loadCloud(){setSync('Đang tải…','saving');const uid=currentUser.id;
  const [m,p,s]=await Promise.all([sb.from('materials').select('*').eq('user_id',uid).order('created_at'),sb.from('products').select('*').eq('user_id',uid).order('created_at'),sb.from('app_settings').select('settings').eq('user_id',uid).maybeSingle()]);

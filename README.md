@@ -30,3 +30,15 @@ Nếu bật email confirmation, thêm URL GitHub Pages của bạn vào Authenti
 
 ## 5. Backup
 Trong web có **Xuất JSON** và **Nhập JSON**. File JSON có thể dùng để backup hoặc chuyển dữ liệu từ bản local cũ.
+
+
+## Cấu trúc đăng nhập 2 trang
+
+- `index.html`: chỉ đăng nhập / đăng ký.
+- `app.html`: giao diện quản lý.
+- `auth.js`: xử lý Supabase Auth và chuyển sang `app.html`.
+- `app.js`: kiểm tra session trước khi tải dữ liệu; chưa đăng nhập sẽ quay về `index.html`.
+- Đăng xuất sẽ quay về `index.html`.
+
+Supabase Redirect URL nên cho phép:
+`https://thanhan671.github.io/atmo-costing/**`
