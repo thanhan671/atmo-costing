@@ -42,3 +42,9 @@ Trong web có **Xuất JSON** và **Nhập JSON**. File JSON có thể dùng đ�
 
 Supabase Redirect URL nên cho phép:
 `https://thanhan671.github.io/atmo-costing/**`
+
+
+## Nhập thời gian in
+Trong form sản phẩm, thời gian in / PEI được nhập bằng 2 ô: **Giờ** và **Phút (0–59)**.
+Frontend tự quy đổi sang giờ thập phân để giữ tương thích với cột `plate_hours` hiện tại trong Supabase.
+Danh sách sản phẩm hiển thị dạng `14h 23m`.

@@ -22,3 +22,9 @@ main{padding:24px 32px}.panel{display:none}.panel.active{display:block}.toolbar{
   .auth-screen{padding:16px}
   .auth-card{padding:24px 20px;border-radius:18px}
 }
+
+.time-field{display:flex;flex-direction:column;gap:7px}
+.field-label{font-size:13px;font-weight:700;color:#374151}
+.time-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.time-inputs label{font-size:12px;color:#64748b}
+@media(max-width:900px){.time-inputs{grid-template-columns:1fr 1fr}}

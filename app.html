@@ -89,7 +89,13 @@
       <div class="dialog-head"><h3 id="productDialogTitle">Sản phẩm</h3><button class="icon-btn" value="cancel">×</button></div><input id="productId" type="hidden">
       <div class="form-grid four">
         <label>Mã SP<input id="pCode" required></label><label>Tên sản phẩm<input id="pName" required></label>
-        <label>Số SP / PEI<input id="pPlateQty" type="number" min="1" step="1" required></label><label>Giờ in / PEI<input id="pPlateHours" type="number" min="0" step="0.01" required></label>
+        <label>Số SP / PEI<input id="pPlateQty" type="number" min="1" step="1" required></label><div class="time-field">
+          <span class="field-label">Thời gian in / PEI</span>
+          <div class="time-inputs">
+            <label>Giờ<input id="pPlateHoursHour" type="number" min="0" step="1" required></label>
+            <label>Phút<input id="pPlateHoursMinute" type="number" min="0" max="59" step="1" required></label>
+          </div>
+        </div>
       </div>
       <h4>Nhựa dùng cho cả PEI</h4><div id="plasticRows" class="material-rows"></div>
       <h4>Phụ kiện dùng cho 1 sản phẩm</h4><div id="accessoryRows" class="material-rows"></div>
