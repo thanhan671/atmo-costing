@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#111827" />
+  <meta name="theme-color" content="#C76A4A" />
   <title>ATMO Costing</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -13,18 +13,37 @@
   <div id="appShell">
 
     <header class="app-header">
-      <div>
-        <h1>ATMO Costing</h1>
-        <p>Quản lý nguyên vật liệu & tính giá sản phẩm in 3D theo PEI / mẻ in</p>
+      <div class="brand-lockup">
+        <img src="assets/atmo-wordmark.jpg" alt="ATMO Studio" class="app-logo">
+        <div class="brand-copy">
+          <span class="eyebrow">COSTING SYSTEM</span>
+          <p>Quản lý giá & vận hành sản phẩm in 3D</p>
+        </div>
       </div>
       <div class="header-actions">
         <span id="syncStatus" class="sync-status">Đã đồng bộ</span>
         <span id="userEmail" class="user-email"></span>
         <button id="btnExport" class="btn secondary">Xuất JSON</button>
         <label class="btn secondary file-btn">Nhập JSON<input id="fileImport" type="file" accept="application/json" hidden></label>
-        <button id="btnLogout" class="btn secondary">Đăng xuất</button>
+        <button id="btnLogout" class="btn ghost-light">Đăng xuất</button>
       </div>
     </header>
+
+    <section class="brand-banner">
+      <div class="brand-banner-copy">
+        <span class="eyebrow terracotta">ATMO STUDIO</span>
+        <h1>Chi phí rõ ràng.<br>Giá bán tự tin.</h1>
+        <p>Tính giá theo PEI, kiểm soát nguyên vật liệu và theo dõi biên lợi nhuận trong một nơi.</p>
+        <div class="banner-metrics">
+          <div><strong>PEI</strong><span>Phân bổ theo mẻ in</span></div>
+          <div><strong>Cloud</strong><span>Đồng bộ Supabase</span></div>
+          <div><strong>Multi-channel</strong><span>MXH · Shopee · TikTok</span></div>
+        </div>
+      </div>
+      <div class="brand-banner-art">
+        <img src="assets/atmo-brand-poster.jpg" alt="ATMO Studio banner">
+      </div>
+    </section>
 
     <nav class="tabs">
       <button class="tab active" data-tab="products">Quản lý giá</button>
@@ -32,22 +51,27 @@
       <button class="tab" data-tab="settings">Thiết lập</button>
     </nav>
 
-    <main>
-      <section id="tab-products" class="panel active">
+    <main class="app-main">
+      <section id="tab-products" class="panel active content-card">
         <div class="toolbar">
-          <div><h2>Sản phẩm</h2><p class="muted">Chi phí nhựa, điện và máy được phân bổ từ cả PEI về từng sản phẩm.</p></div>
+          <div><span class="section-kicker">PRODUCT COSTING</span><h2>Sản phẩm</h2><p class="muted">Chi phí nhựa, điện và máy được phân bổ từ cả PEI về từng sản phẩm.</p></div>
           <button id="btnAddProduct" class="btn primary">+ Thêm sản phẩm</button>
         </div>
         <div class="table-wrap"><table id="productTable"><thead><tr>
-          <th>Mã SP</th><th>Tên sản phẩm</th><th>SP/PEI</th><th>Giờ/PEI</th>
-          <th>Nhựa/SP</th><th>Phụ kiện/SP</th><th>Bao bì/SP</th><th>Điện/SP</th><th>Máy/SP</th><th>Hậu xử lý/SP</th>
-          <th>Giá vốn</th><th>Trực tiếp</th><th>MXH</th><th>Shopee</th><th>TikTok</th><th></th>
+          <th>Mã SP</th>
+          <th>Tên sản phẩm</th>
+          <th>Giá vốn</th>
+          <th>Trực tiếp</th>
+          <th>MXH</th>
+          <th>Shopee</th>
+          <th>TikTok</th>
+          <th></th>
         </tr></thead><tbody></tbody></table></div>
       </section>
 
-      <section id="tab-materials" class="panel">
+      <section id="tab-materials" class="panel content-card">
         <div class="toolbar">
-          <div><h2>Nguyên vật liệu</h2><p class="muted">Nhựa tính theo gram; phụ kiện và bao bì tính theo đơn vị sử dụng.</p></div>
+          <div><span class="section-kicker">MATERIAL LIBRARY</span><h2>Nguyên vật liệu</h2><p class="muted">Nhựa tính theo gram; phụ kiện và bao bì tính theo đơn vị sử dụng.</p></div>
           <button id="btnAddMaterial" class="btn primary">+ Thêm nguyên vật liệu</button>
         </div>
         <div class="table-wrap"><table id="materialTable"><thead><tr>
@@ -55,7 +79,7 @@
         </tr></thead><tbody></tbody></table></div>
       </section>
 
-      <section id="tab-settings" class="panel">
+      <section id="tab-settings" class="panel content-card">
         <div class="settings-grid">
           <div class="card"><label>Chi phí máy / giờ (đ)<input id="sMachinePerHour" type="number" min="0"></label></div>
           <div class="card"><label>Giá điện / kWh (đ)<input id="sElectricityPrice" type="number" min="0"></label></div>

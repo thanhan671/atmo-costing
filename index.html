@@ -3,39 +3,61 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#111827" />
+  <meta name="theme-color" content="#C76A4A" />
   <title>Đăng nhập · ATMO Costing</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
 </head>
 <body class="auth-page">
-  <main class="auth-screen">
-    <div class="auth-card">
-      <div class="brand-mark">AT</div>
-      <h1>ATMO Costing</h1>
-      <p class="muted">Đăng nhập để đồng bộ dữ liệu giá in 3D trên mọi thiết bị.</p>
-
-      <div class="auth-tabs">
-        <button id="authLoginTab" class="auth-tab active" type="button">Đăng nhập</button>
-        <button id="authSignupTab" class="auth-tab" type="button">Tạo tài khoản</button>
+  <main class="auth-layout">
+    <section class="auth-brand-panel">
+      <img src="assets/atmo-symbol.png" alt="ATMO symbol" class="auth-symbol-bg">
+      <div class="auth-brand-overlay">
+        <span class="eyebrow">ATMO STUDIO · COSTING SYSTEM</span>
+        <h1>Made layer by layer.</h1>
+        <p>Quản lý chi phí, nguyên vật liệu và giá bán cho sản phẩm in 3D theo cách gọn gàng, thẩm mỹ và đồng bộ trên mọi thiết bị.</p>
+        <div class="brand-chips">
+          <span>3D Printed Decor</span>
+          <span>Accessories</span>
+          <span>Nameplates</span>
+          <span>Daily Goods</span>
+        </div>
       </div>
+    </section>
 
-      <form id="authForm">
-        <label>Email
-          <input id="authEmail" type="email" autocomplete="email" required>
-        </label>
-        <label>Mật khẩu
-          <input id="authPassword" type="password" minlength="6" autocomplete="current-password" required>
-        </label>
-        <button id="authSubmit" class="btn primary full" type="submit">Đăng nhập</button>
-      </form>
+    <section class="auth-form-panel">
+      <div class="auth-card">
+        <img src="assets/atmo-wordmark.jpg" class="auth-logo" alt="ATMO Studio">
+        <div class="auth-copy">
+          <span class="eyebrow terracotta">ATMO COSTING</span>
+          <h2>Chào mừng trở lại</h2>
+          <p>Đăng nhập để tiếp tục quản lý chi phí và giá bán.</p>
+        </div>
 
-      <p id="authMessage" class="auth-message"></p>
-      <p class="hint">Dữ liệu được bảo vệ bằng Row Level Security của Supabase.</p>
-    </div>
+        <div class="auth-tabs">
+          <button id="authLoginTab" class="auth-tab active" type="button">Đăng nhập</button>
+          <button id="authSignupTab" class="auth-tab" type="button">Tạo tài khoản</button>
+        </div>
+
+        <form id="authForm">
+          <label>Email
+            <input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+          </label>
+          <label>Mật khẩu
+            <input id="authPassword" type="password" minlength="6" autocomplete="current-password" placeholder="••••••••" required>
+          </label>
+          <button id="authSubmit" class="btn primary full" type="submit">Đăng nhập</button>
+        </form>
+
+        <p id="authMessage" class="auth-message"></p>
+        <div class="auth-footnote">
+          <span class="status-dot"></span>
+          Dữ liệu được bảo vệ bằng Supabase Row Level Security.
+        </div>
+      </div>
+    </section>
   </main>
-
   <script src="auth.js"></script>
 </body>
 </html>
