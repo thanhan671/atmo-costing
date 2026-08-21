@@ -53,20 +53,28 @@
 
     <main class="app-main">
       <section id="tab-products" class="panel active content-card">
-        <div class="toolbar">
-          <div><span class="section-kicker">PRODUCT COSTING</span><h2>Sản phẩm</h2><p class="muted">Chi phí nhựa, điện và máy được phân bổ từ cả PEI về từng sản phẩm.</p></div>
-          <button id="btnAddProduct" class="btn primary">+ Thêm sản phẩm</button>
+        <div class="toolbar product-toolbar">
+          <div class="product-heading">
+            <span class="section-kicker">PRODUCT COSTING</span>
+            <h2>Sản phẩm</h2>
+            <p class="muted">Tra cứu nhanh giá bán theo từng kênh.</p>
+          </div>
+          <div class="product-toolbar-actions">
+            <div class="search-box">
+              <span class="search-icon">⌕</span>
+              <input id="productSearch" type="search" placeholder="Tìm mã hoặc tên sản phẩm..." autocomplete="off">
+              <button id="btnClearProductSearch" class="search-clear" type="button" aria-label="Xóa tìm kiếm">×</button>
+            </div>
+            <button id="btnAddProduct" class="btn primary">+ Thêm sản phẩm</button>
+          </div>
         </div>
-        <div class="table-wrap"><table id="productTable"><thead><tr>
-          <th>Mã SP</th>
-          <th>Tên sản phẩm</th>
-          <th>Giá vốn</th>
-          <th>Trực tiếp</th>
-          <th>MXH</th>
-          <th>Shopee</th>
-          <th>TikTok</th>
-          <th></th>
+        <div class="table-wrap product-table-wrap"><table id="productTable"><thead><tr>
+          <th>Mã SP</th><th>Tên sản phẩm</th><th>Giá vốn</th><th>Trực tiếp</th><th>MXH</th><th>Shopee</th><th>TikTok</th><th>Thao tác</th>
         </tr></thead><tbody></tbody></table></div>
+        <div class="pagination" id="productPagination">
+          <span id="productPageInfo" class="page-info"></span>
+          <div class="page-actions"><button id="btnProductPrev" class="page-btn" type="button">‹ Trước</button><span id="productPageNumber" class="page-number">1 / 1</span><button id="btnProductNext" class="page-btn" type="button">Sau ›</button></div>
+        </div>
       </section>
 
       <section id="tab-materials" class="panel content-card">
@@ -111,8 +119,9 @@
 
     <dialog id="productDialog" class="dialog wide"><form method="dialog" id="productForm">
       <div class="dialog-head"><h3 id="productDialogTitle">Sản phẩm</h3><button class="icon-btn" value="cancel" formnovalidate>×</button></div><input id="productId" type="hidden">
-      <div class="form-grid four">
-        <label>Mã SP<input id="pCode" required></label><label>Tên sản phẩm<input id="pName" required></label>
+      <input id="pCode" type="hidden">
+      <div class="form-grid three product-main-fields">
+        <label>Tên sản phẩm<input id="pName" required placeholder="Ví dụ: Móc khóa mũ cối"></label>
         <label>Số SP / PEI<input id="pPlateQty" type="number" min="1" step="1" required></label><div class="time-field">
           <span class="field-label">Thời gian in / PEI</span>
           <div class="time-inputs">

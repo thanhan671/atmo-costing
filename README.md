@@ -48,3 +48,10 @@ Supabase Redirect URL nên cho phép:
 Trong form sản phẩm, thời gian in / PEI được nhập bằng 2 ô: **Giờ** và **Phút (0–59)**.
 Frontend tự quy đổi sang giờ thập phân để giữ tương thích với cột `plate_hours` hiện tại trong Supabase.
 Danh sách sản phẩm hiển thị dạng `14h 23m`.
+
+
+## Product list UX
+- Auto code: ATMO-001, ATMO-002... using highest existing code + 1.
+- Search by code/name.
+- Pagination: 10 products/page.
+- Mobile product cards; no landscape rotation required.
