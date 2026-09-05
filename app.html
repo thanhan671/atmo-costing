@@ -47,6 +47,7 @@
 
     <nav class="tabs">
       <button class="tab active" data-tab="products">Quản lý giá</button>
+      <button class="tab" data-tab="orders">Đơn hàng</button>
       <button class="tab" data-tab="materials">Nguyên vật liệu</button>
       <button class="tab" data-tab="settings">Thiết lập</button>
     </nav>
@@ -74,6 +75,55 @@
         <div class="pagination" id="productPagination">
           <span id="productPageInfo" class="page-info"></span>
           <div class="page-actions"><button id="btnProductPrev" class="page-btn" type="button">‹ Trước</button><span id="productPageNumber" class="page-number">1 / 1</span><button id="btnProductNext" class="page-btn" type="button">Sau ›</button></div>
+        </div>
+      </section>
+
+
+      <section id="tab-orders" class="panel content-card">
+        <div class="toolbar order-toolbar">
+          <div>
+            <span class="section-kicker">ORDER MANAGEMENT</span>
+            <h2>Đơn đặt hàng</h2>
+            <p class="muted">Theo dõi đơn, phân loại sản phẩm và trạng thái chuẩn bị hàng.</p>
+          </div>
+          <div class="order-toolbar-actions">
+            <div class="search-box order-search-box">
+              <span class="search-icon">⌕</span>
+              <input id="orderSearch" type="search" placeholder="Tìm mã đơn, khách hàng, sản phẩm..." autocomplete="off">
+              <button id="btnClearOrderSearch" class="search-clear" type="button" aria-label="Xóa tìm kiếm">×</button>
+            </div>
+            <select id="orderStatusFilter" class="order-status-filter" aria-label="Lọc trạng thái">
+              <option value="">Tất cả trạng thái</option>
+              <option value="Mới">Mới</option>
+              <option value="Đang chuẩn bị">Đang chuẩn bị</option>
+              <option value="Sẵn sàng">Sẵn sàng</option>
+              <option value="Đã giao">Đã giao</option>
+              <option value="Hủy">Hủy</option>
+            </select>
+            <button id="btnAddOrder" class="btn primary">+ Thêm đơn hàng</button>
+          </div>
+        </div>
+
+        <div class="order-summary">
+          <div class="order-stat"><span>Chờ xử lý</span><strong id="orderPendingCount">0</strong></div>
+          <div class="order-stat"><span>Đang chuẩn bị</span><strong id="orderPreparingCount">0</strong></div>
+          <div class="order-stat"><span>Sẵn sàng</span><strong id="orderReadyCount">0</strong></div>
+          <div class="order-stat"><span>Tổng đơn</span><strong id="orderTotalCount">0</strong></div>
+        </div>
+
+        <div class="table-wrap order-table-wrap">
+          <table id="orderTable">
+            <thead><tr>
+              <th>Mã đơn</th>
+              <th>Khách hàng</th>
+              <th>Sản phẩm / Phân loại</th>
+              <th>Kênh</th>
+              <th>Hẹn giao</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
         </div>
       </section>
 
@@ -141,6 +191,88 @@
       <div id="costPreview" class="cost-preview"></div>
       <div class="dialog-actions"><button value="cancel" class="btn secondary" formnovalidate>Hủy</button><button id="btnSaveProduct" value="default" class="btn primary">Lưu sản phẩm</button></div>
     </form></dialog>
+
+
+    <dialog id="orderDialog" class="dialog wide order-dialog">
+      <form method="dialog" id="orderForm">
+        <div class="dialog-head">
+          <div>
+            <span class="section-kicker">ORDER</span>
+            <h3 id="orderDialogTitle">Thêm đơn hàng</h3>
+          </div>
+          <button class="icon-btn" value="cancel" formnovalidate>×</button>
+        </div>
+
+        <input id="orderId" type="hidden">
+        <input id="oCode" type="hidden">
+
+        <div class="form-grid three">
+          <label>Tên khách hàng
+            <input id="oCustomerName" required placeholder="Tên người nhận / tên khách">
+          </label>
+          <label>Số điện thoại
+            <input id="oCustomerPhone" type="tel" placeholder="Không bắt buộc">
+          </label>
+          <label>Kênh đơn hàng
+            <select id="oChannel" required>
+              <option value="Trực tiếp">Trực tiếp</option>
+              <option value="Facebook/MXH">Facebook / MXH</option>
+              <option value="Shopee">Shopee</option>
+              <option value="TikTok">TikTok</option>
+              <option value="Khác">Khác</option>
+            </select>
+          </label>
+          <label>Ngày nhận đơn
+            <input id="oOrderDate" type="date" required>
+          </label>
+          <label>Hẹn giao
+            <input id="oDueDate" type="date">
+          </label>
+          <label>Trạng thái
+            <select id="oStatus" required>
+              <option value="Mới">Mới</option>
+              <option value="Đang chuẩn bị">Đang chuẩn bị</option>
+              <option value="Sẵn sàng">Sẵn sàng</option>
+              <option value="Đã giao">Đã giao</option>
+              <option value="Hủy">Hủy</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="order-items-head">
+          <div>
+            <h4>Sản phẩm trong đơn</h4>
+            <p class="hint">Chọn sản phẩm từ danh sách, nhập phân loại như màu / kích thước / nội dung tùy chỉnh.</p>
+          </div>
+          <button id="btnAddOrderItem" class="btn secondary" type="button">+ Thêm mặt hàng</button>
+        </div>
+        <div id="orderItemRows" class="order-item-rows"></div>
+
+        <label class="order-note-label">Ghi chú đơn hàng
+          <textarea id="oNote" rows="3" placeholder="Ghi chú đóng gói, yêu cầu của khách, nội dung cần in..."></textarea>
+        </label>
+
+        <div class="dialog-actions">
+          <button value="cancel" class="btn secondary" formnovalidate>Hủy</button>
+          <button id="btnSaveOrder" value="default" class="btn primary">Lưu đơn hàng</button>
+        </div>
+      </form>
+    </dialog>
+
+    <template id="orderItemTemplate">
+      <div class="order-item-row">
+        <label>Sản phẩm
+          <select class="order-product-select"></select>
+        </label>
+        <label>Phân loại / thuộc tính
+          <input class="order-variant" placeholder="VD: Đỏ, size L, tên An...">
+        </label>
+        <label>Số lượng
+          <input class="order-qty" type="number" min="1" step="1" value="1">
+        </label>
+        <button class="order-item-remove" type="button" aria-label="Xóa mặt hàng">×</button>
+      </div>
+    </template>
 
     <template id="materialRowTemplate"><div class="material-row"><select class="mat-select"></select><input class="mat-qty" type="number" min="0" step="0.01"><span class="unit-label"></span></div></template>
   

@@ -55,3 +55,17 @@ Danh sách sản phẩm hiển thị dạng `14h 23m`.
 - Search by code/name.
 - Pagination: 10 products/page.
 - Mobile product cards; no landscape rotation required.
+
+
+## Quản lý đơn hàng
+Bản này bổ sung tab **Đơn hàng**:
+- Tạo mã đơn tự động dạng `ATMO-DH-001`.
+- Chọn nhiều mặt hàng từ danh sách sản phẩm.
+- Mỗi mặt hàng có **Phân loại / thuộc tính** tự do (màu, size, tên cá nhân hóa...) và số lượng.
+- Theo dõi trạng thái: Mới → Đang chuẩn bị → Sẵn sàng → Đã giao / Hủy.
+- Tìm kiếm đơn theo mã đơn, khách hàng, sản phẩm hoặc phân loại.
+- Lọc trạng thái và đổi trạng thái nhanh ngay trong danh sách.
+- Giao diện mobile chuyển thành card.
+
+### Cập nhật Supabase
+Trước khi dùng tab Đơn hàng, chạy file `supabase/orders.sql` **một lần** trong Supabase SQL Editor.
